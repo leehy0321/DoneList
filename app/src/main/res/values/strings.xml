@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">DoneList</string>
+    <string name="screen_title">Done List</string>
+    <string name="title_activity_login">LoginScreen</string>
+    <string name="show_list">SHOW LIST</string>
+    <string name="login_screen_id_title">Id</string>
+    <string name="login_screen_pwd_title">Password</string>
+
+    <string name="back_button">back</string>
+    <string name="title_activity_list_screen">ListScreen</string>
 </resources>

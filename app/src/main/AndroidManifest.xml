@@ -13,6 +13,16 @@
         android:theme="@style/Theme.DoneList"
         tools:targetApi="31">
         <activity
+            android:name=".ui.ListScreen"
+            android:exported="false"
+            android:label="@string/title_activity_list_screen"
+            android:theme="@style/Theme.DoneList" />
+        <activity
+            android:name=".ui.LoginScreen"
+            android:exported="false"
+            android:label="@string/title_activity_login"
+            android:theme="@style/Theme.DoneList" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
