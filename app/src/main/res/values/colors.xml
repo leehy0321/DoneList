@@ -8,4 +8,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="point_pink_color">#F79E89</color>
+    <color name="help_grey_color">#656565</color>
 </resources>

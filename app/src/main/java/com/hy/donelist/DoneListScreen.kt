@@ -22,10 +22,13 @@ import androidx.navigation.compose.rememberNavController
 import com.hy.donelist.ui.DoneListViewModel
 import com.hy.donelist.ui.ListScreen
 import com.hy.donelist.ui.LoginScreenDisplay
+import com.hy.donelist.ui.NumberScreen
 
 enum class DoneListScreen() {
-    Login,
-    List
+    Number,
+    List,
+    Create,
+    Login
 }
 
 /**
@@ -62,19 +65,14 @@ fun DoneListApp(
     viewModel: DoneListViewModel = viewModel(),
 ) {
     val navController = rememberNavController()
-    Scaffold(
-        topBar = {
-            DoneListAppBar(
-                canNavigateBack = false,
-                navigateUp = { /* TODO: implement back navigation */ }
-            )
-        }
-    ) { innerPadding ->
-        val uiState by viewModel.uiState.collectAsState()
-
         NavHost(navController = navController,
-            startDestination = DoneListScreen.Login.name,
-            modifier = modifier.padding(innerPadding)) {
+            startDestination = DoneListScreen.Number.name,
+            modifier = Modifier){
+
+            composable(route = DoneListScreen.Number.name) {
+                NumberScreen()
+            }
+
             composable(route = DoneListScreen.Login.name) {
                 LoginScreenDisplay(
                     onLoginButtonClicked = {
@@ -83,10 +81,12 @@ fun DoneListApp(
                     }
                 )
             }
+
             composable(route = DoneListScreen.List.name) {
                 ListScreen(
                 )
             }
+
         }
-    }
+
 }

@@ -13,6 +13,11 @@
         android:theme="@style/Theme.DoneList"
         tools:targetApi="31">
         <activity
+            android:name=".ui.NumberScreen"
+            android:exported="false"
+            android:label="@string/title_activity_number_screen"
+            android:theme="@style/Theme.DoneList" />
+        <activity
             android:name=".ui.ListScreen"
             android:exported="false"
             android:label="@string/title_activity_list_screen"
