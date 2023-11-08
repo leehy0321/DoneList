@@ -6,9 +6,10 @@
     <string name="login_screen_id_title">Id</string>
     <string name="login_screen_pwd_title">Password</string>
     <string name="number_title">SET NUMBER</string>
-    <string name="number_help">assign a daily number for done list</string>
+    <string name="number_help">assign a daily number for done list (1 - 5)</string>
+    <string name="number_setting_warning_message_under_1">Please, set a number minimum of 1</string>
+    <string name="number_setting_warning_message_upper_5">Please, set a number maximum of 5</string>
     <string name="finish_number_setting">Finish Setting</string>
-    <string name="count_number">5</string>
 
     <string name="back_button">back</string>
     <string name="title_activity_list_screen">ListScreen</string>

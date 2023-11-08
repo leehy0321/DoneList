@@ -8,9 +8,10 @@ import com.hy.donelist.ui.ui.theme.DoneListTheme
 
 @Composable
 fun ListScreen(
-    modifier: Modifier = Modifier) {
+    modifier: Modifier = Modifier,
+    countNumber: Int) {
     Text(
-        text = "Hello!",
+        text = "Hello! $countNumber",
         modifier = modifier
     )
 }
@@ -19,6 +20,6 @@ fun ListScreen(
 @Composable
 fun ListScreenPreview() {
     DoneListTheme {
-        ListScreen()
+        ListScreen(countNumber = 3)
     }
 }

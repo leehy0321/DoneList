@@ -1,5 +1,7 @@
 package com.hy.donelist
 
+import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -59,10 +61,12 @@ fun DoneListAppBar(
     )
 }
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun DoneListApp(
     modifier: Modifier = Modifier,
     viewModel: DoneListViewModel = viewModel(),
+    context: Context
 ) {
     val navController = rememberNavController()
         NavHost(navController = navController,
@@ -70,20 +74,27 @@ fun DoneListApp(
             modifier = Modifier){
 
             composable(route = DoneListScreen.Number.name) {
-                NumberScreen()
+                NumberScreen(
+                    context = context,
+                    onFinishSettingButtonClicked = {
+                        viewModel.setCountNumber(it)
+                        navController.navigate(DoneListScreen.List.name)
+                    }
+                )
             }
 
             composable(route = DoneListScreen.Login.name) {
                 LoginScreenDisplay(
                     onLoginButtonClicked = {
                         1
-                        navController.navigate(DoneListScreen.List.name)
+                        navController.navigate(DoneListScreen.Number.name)
                     }
                 )
             }
 
             composable(route = DoneListScreen.List.name) {
                 ListScreen(
+                    countNumber = viewModel.getCountNumber()
                 )
             }
 
