@@ -23,15 +23,18 @@ import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hy.donelist.R
+import com.hy.donelist.ui.ui.theme.DoneListTheme
 
 @Composable
 fun NumberScreen(
@@ -150,5 +153,13 @@ private class TriangleShape : Shape {
             close()
         }
         return Outline.Generic(path)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun NumberScreenPreview() {
+    DoneListTheme {
+        NumberScreen(onFinishSettingButtonClicked = {}, context = LocalContext.current)
     }
 }

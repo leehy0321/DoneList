@@ -50,7 +50,7 @@ fun DoneListApp(
 
             composable(route = DoneListScreen.List.name) {
                 ListScreen(
-                    countNumber = viewModel.getCountNumber()
+                    doneListData = viewModel.getListDoneList()
                 )
             }
 

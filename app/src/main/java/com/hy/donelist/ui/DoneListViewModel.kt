@@ -1,6 +1,7 @@
 package com.hy.donelist.ui
 
 import androidx.lifecycle.ViewModel
+import com.hy.donelist.data.DoneListData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -23,8 +24,24 @@ class DoneListViewModel: ViewModel() {
         }
     }
 
+    /**
+     * Get the quantity of donelist for creating.
+     */
     fun getCountNumber() : Int {
         return _uiState.value.numberCount
+    }
+
+    fun addDoneListData(newDoneData: DoneListData) {
+        val addedDoneList = _uiState.value.doneList + newDoneData
+        _uiState.update { currentState ->
+            currentState.copy(
+                doneList = addedDoneList
+            )
+        }
+    }
+
+    fun getListDoneList() : List<DoneListData> {
+        return _uiState.value.doneList
     }
 
 }

@@ -29,9 +29,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hy.donelist.R
+import com.hy.donelist.ui.ui.theme.DoneListTheme
 
 @Composable
 fun LoginScreenDisplay(
@@ -131,5 +133,13 @@ fun LoginScreenDisplay(
         ) {
             Text(stringResource(R.string.show_list))
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LoginScreenPreview() {
+    DoneListTheme {
+        LoginScreenDisplay( onLoginButtonClicked = {})
     }
 }
