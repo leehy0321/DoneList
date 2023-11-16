@@ -9,9 +9,20 @@ import com.hy.donelist.data.UserData
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class DoneListViewModel: ViewModel() {
+class DoneListViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(UserData())
     val uiState: StateFlow<UserData> = _uiState.asStateFlow()
+
+    /**
+     * Set the current content [content] to control (create or show)
+     */
+    fun setCurrentContents(content: DoneListData) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                currentContent = content
+            )
+        }
+    }
 
     /**
      * Set the quantity [countNumber] of donelist for creating.
@@ -24,13 +35,6 @@ class DoneListViewModel: ViewModel() {
         }
     }
 
-    /**
-     * Get the quantity of donelist for creating.
-     */
-    fun getCountNumber() : Int {
-        return _uiState.value.numberCount
-    }
-
     fun addDoneListData(newDoneData: DoneListData) {
         val addedDoneList = _uiState.value.doneList + newDoneData
         _uiState.update { currentState ->
@@ -39,9 +43,4 @@ class DoneListViewModel: ViewModel() {
             )
         }
     }
-
-    fun getListDoneList() : List<DoneListData> {
-        return _uiState.value.doneList
-    }
-
 }

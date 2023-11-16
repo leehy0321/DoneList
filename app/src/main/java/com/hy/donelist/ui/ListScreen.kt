@@ -7,12 +7,19 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,7 +39,8 @@ import com.hy.donelist.ui.ui.theme.DoneListTheme
 @Composable
 fun ListScreen(
     modifier: Modifier = Modifier,
-    doneListData: List<DoneListData>
+    doneListData: List<DoneListData>,
+    onContentManageClickedEvent: (DoneListData) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -50,11 +58,16 @@ fun ListScreen(
             modifier = Modifier.padding(bottom = 40.dp)
         )
 
-        LazyColumn(modifier.fillMaxHeight(0.8f)) {
+        LazyColumn(
+            modifier
+                .fillMaxHeight(0.7f)
+                .padding(bottom = 20.dp)
+        ) {
             items(doneListData) { item ->
                 Card(
+                    onClick = { onContentManageClickedEvent(item) },
                     modifier = Modifier
-                        .padding(horizontal = 8.dp, vertical = 5.dp)
+                        .padding(horizontal = 8.dp, vertical = 10.dp)
                         .fillMaxWidth(),
                     shape = RoundedCornerShape(corner = CornerSize(16.dp)),
                     colors = CardDefaults.cardColors(
@@ -72,26 +85,29 @@ fun ListScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            modifier = modifier.padding(1.dp),
+                            modifier = modifier.padding(start = 5.dp),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
                             text = item.date
                         )
                         Row(
                             horizontalArrangement = Arrangement.End,
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = modifier.padding(end = 5.dp)
                         ) {
                             Text(
-                                modifier = modifier.padding(1.dp),
-                                textAlign = TextAlign.End,
-                                text = "" + item.doneCount
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                text = "" + item.doneContent.size
                             )
                             Text(
-                                modifier = modifier.padding(3.dp),
-                                textAlign = TextAlign.End,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
                                 text = "/"
                             )
                             Text(
-                                modifier = modifier.padding(1.dp),
-                                textAlign = TextAlign.End,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
                                 text = "" + item.allCount
                             )
                         }
@@ -99,18 +115,36 @@ fun ListScreen(
                 }
             }
         }
+
+        Button(
+            onClick = { onContentManageClickedEvent(DoneListData("", 0, listOf(""))) },
+            modifier = modifier.size(90.dp),
+            shape = CircleShape,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.White,
+                disabledContentColor = Color.LightGray,
+                contentColor = colorResource(id = R.color.point_pink_color),
+                disabledContainerColor = Color.White
+            )
+        ) {
+            Icon(
+                Icons.Default.Add,
+                contentDescription = "content description",
+                modifier = modifier.fillMaxSize()
+            )
+        }
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = false)
 @Composable
 fun ListScreenPreview() {
     DoneListTheme {
         val list = listOf(
-            DoneListData("2023-11-17", 5, 1, listOf("ss")),
-            DoneListData("2023-11-16", 5, 2, listOf("ss")),
-            DoneListData("2023-11-15", 5, 3, listOf("ss"))
+            DoneListData("2023-11-17", 5, listOf("aa", "bb", "cc")),
+            DoneListData("2023-11-16", 5, listOf("ss")),
+            DoneListData("2023-11-15", 5, listOf("ss"))
         )
-        ListScreen(doneListData = list)
+        ListScreen(doneListData = list, onContentManageClickedEvent = {})
     }
 }
