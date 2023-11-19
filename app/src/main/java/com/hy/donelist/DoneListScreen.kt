@@ -60,9 +60,13 @@ fun DoneListApp(
         composable(route = DoneListScreen.List.name) {
             /* TEST */
             val list = listOf(
-                DoneListData("2023-11-17", uiState.numberCount, listOf("aa", "bb", "cc")),
-                DoneListData("2023-11-16", uiState.numberCount, listOf("ss")),
-                DoneListData("2023-11-15", uiState.numberCount, listOf("ss"))
+                DoneListData(
+                    "2023-11-17",
+                    uiState.numberCount,
+                    arrayListOf("Clean up the desk", "Go to school", "Do the homework")
+                ),
+                DoneListData("2023-11-16", uiState.numberCount, arrayListOf("ss")),
+                DoneListData("2023-11-15", uiState.numberCount, arrayListOf("ss"))
             )
             ListScreen(doneListData = list,
                 onContentManageClickedEvent = {

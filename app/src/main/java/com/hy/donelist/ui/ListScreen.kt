@@ -117,7 +117,7 @@ fun ListScreen(
         }
 
         Button(
-            onClick = { onContentManageClickedEvent(DoneListData("", 0, listOf(""))) },
+            onClick = { onContentManageClickedEvent(DoneListData("", 0, arrayListOf(""))) },
             modifier = modifier.size(90.dp),
             shape = CircleShape,
             colors = ButtonDefaults.buttonColors(
@@ -141,9 +141,9 @@ fun ListScreen(
 fun ListScreenPreview() {
     DoneListTheme {
         val list = listOf(
-            DoneListData("2023-11-17", 5, listOf("aa", "bb", "cc")),
-            DoneListData("2023-11-16", 5, listOf("ss")),
-            DoneListData("2023-11-15", 5, listOf("ss"))
+            DoneListData("2023-11-17", 5, arrayListOf("aa", "bb", "cc")),
+            DoneListData("2023-11-16", 5, arrayListOf("ss")),
+            DoneListData("2023-11-15", 5, arrayListOf("ss"))
         )
         ListScreen(doneListData = list, onContentManageClickedEvent = {})
     }
