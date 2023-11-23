@@ -1,5 +1,6 @@
 package com.hy.donelist.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,12 +35,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hy.donelist.R
 import com.hy.donelist.data.DoneListData
 import com.hy.donelist.ui.ui.theme.DoneListTheme
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
+@SuppressLint("SimpleDateFormat")
 @Composable
 fun ListScreen(
+    allDoneCount: Int,
     modifier: Modifier = Modifier,
     doneListData: List<DoneListData>,
     onContentManageClickedEvent: (DoneListData) -> Unit
@@ -115,9 +123,18 @@ fun ListScreen(
                 }
             }
         }
-
         Button(
-            onClick = { onContentManageClickedEvent(DoneListData("", 0, arrayListOf(""))) },
+            onClick = {
+                val currentDate = SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().time)
+
+                onContentManageClickedEvent(
+                    DoneListData(
+                        currentDate.toString(),
+                        allDoneCount,
+                        arrayListOf("")
+                    )
+                )
+            },
             modifier = modifier.size(90.dp),
             shape = CircleShape,
             colors = ButtonDefaults.buttonColors(
@@ -145,6 +162,6 @@ fun ListScreenPreview() {
             DoneListData("2023-11-16", 5, arrayListOf("ss")),
             DoneListData("2023-11-15", 5, arrayListOf("ss"))
         )
-        ListScreen(doneListData = list, onContentManageClickedEvent = {})
+        ListScreen(doneListData = list,allDoneCount = 5, onContentManageClickedEvent = {})
     }
 }

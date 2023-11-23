@@ -8,11 +8,14 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.LocalTextStyle
@@ -27,12 +30,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hy.donelist.R
 import com.hy.donelist.data.DoneListData
 import com.hy.donelist.ui.ui.theme.DoneListTheme
@@ -40,6 +45,7 @@ import com.hy.donelist.ui.ui.theme.DoneListTheme
 @Composable
 fun ContentsScreen(
     content: DoneListData,
+    viewModel: DoneListViewModel = viewModel(),
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -65,7 +71,7 @@ fun ContentsScreen(
 
         LazyColumn(
             modifier
-                .fillMaxHeight(0.8f)
+                .fillMaxHeight(0.7f)
                 .padding(bottom = 20.dp)
         ) {
             itemsIndexed(content.doneContent) { index, item ->
@@ -117,6 +123,26 @@ fun ContentsScreen(
                     }
                 }
             }
+        }
+
+        Button(
+            onClick = {
+                viewModel.setCurrentContents(content)
+            },
+            modifier = modifier
+                .widthIn(min = 200.dp),
+            shape = RoundedCornerShape(25.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.White,
+                disabledContentColor = Color.LightGray,
+                contentColor = colorResource(id = R.color.point_pink_color),
+                disabledContainerColor = Color.White
+            )
+        ) {
+            Text(
+                text = stringResource(R.string.save_button_title),
+                fontSize = 20.sp
+            )
         }
     }
 }

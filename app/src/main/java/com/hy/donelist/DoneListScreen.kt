@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.hy.donelist.data.DoneListData
+import com.hy.donelist.data.DoneListRoomDatabase
 import com.hy.donelist.ui.ContentsScreen
 import com.hy.donelist.ui.DoneListViewModel
 import com.hy.donelist.ui.ListScreen
@@ -32,13 +33,13 @@ fun DoneListApp(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val navController = rememberNavController()
+    val database: DoneListRoomDatabase by lazy { DoneListRoomDatabase.getDatabase(context)}
+
     NavHost(
         navController = navController,
         startDestination = DoneListScreen.Number.name,
         modifier = Modifier
     ) {
-
-
         composable(route = DoneListScreen.Number.name) {
             NumberScreen(
                 context = context,
@@ -68,7 +69,9 @@ fun DoneListApp(
                 DoneListData("2023-11-16", uiState.numberCount, arrayListOf("ss")),
                 DoneListData("2023-11-15", uiState.numberCount, arrayListOf("ss"))
             )
-            ListScreen(doneListData = list,
+            ListScreen(
+                allDoneCount = uiState.numberCount,
+                doneListData = list,
                 onContentManageClickedEvent = {
                     viewModel.setCurrentContents(it)
                     navController.navigate(DoneListScreen.Contents.name)

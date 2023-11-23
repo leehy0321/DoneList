@@ -10,6 +10,7 @@
     <string name="number_setting_warning_message_under_1">Please, set a number minimum of 1</string>
     <string name="number_setting_warning_message_upper_5">Please, set a number maximum of 5</string>
     <string name="finish_number_setting">Finish Setting</string>
+    <string name="save_button_title">SAVE</string>
 
     <string name="back_button">back</string>
     <string name="title_activity_list_screen">ListScreen</string>

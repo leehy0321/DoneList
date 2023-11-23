@@ -1,6 +1,8 @@
 package com.hy.donelist.ui
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.hy.donelist.data.DoneListDao
 import com.hy.donelist.data.DoneListData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -8,8 +10,9 @@ import kotlinx.coroutines.flow.StateFlow
 import com.hy.donelist.data.UserData
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class DoneListViewModel : ViewModel() {
+class DoneListViewModel(private val doneListDao: DoneListDao) : ViewModel() {
     private val _uiState = MutableStateFlow(UserData())
     val uiState: StateFlow<UserData> = _uiState.asStateFlow()
 
@@ -35,12 +38,13 @@ class DoneListViewModel : ViewModel() {
         }
     }
 
-    fun addDoneListData(newDoneData: DoneListData) {
-        val addedDoneList = _uiState.value.doneList + newDoneData
-        _uiState.update { currentState ->
-            currentState.copy(
-                doneList = addedDoneList
-            )
+    private fun insertDoneListData(newDoneData: DoneListData) {
+        viewModelScope.launch {
+            doneListDao.insert(newDoneData)
         }
+    }
+
+    fun addDoneListData(date: String, allCount: Int, doneList: ArrayList<String>) {
+        insertDoneListData(DoneListData(date, allCount, doneList))
     }
 }
