@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -14,6 +13,7 @@ import com.hy.donelist.data.DoneListData
 import com.hy.donelist.data.DoneListRoomDatabase
 import com.hy.donelist.ui.ContentsScreen
 import com.hy.donelist.ui.DoneListViewModel
+import com.hy.donelist.ui.DoneListViewModelFactory
 import com.hy.donelist.ui.ListScreen
 import com.hy.donelist.ui.LoginScreenDisplay
 import com.hy.donelist.ui.NumberScreen
@@ -25,15 +25,23 @@ enum class DoneListScreen {
     Contents
 }
 
+class DoneListAppInfo(context: Context) {
+    val doneListViewModel: DoneListViewModel by lazy {
+        DoneListViewModelFactory(DoneListRoomDatabase.getDatabase(context).itemDao()).create(
+            DoneListViewModel::class.java
+        )
+    }
+}
+
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun DoneListApp(
-    viewModel: DoneListViewModel = viewModel(),
     context: Context
 ) {
+    val viewModel = DoneListAppInfo(context).doneListViewModel
+
     val uiState by viewModel.uiState.collectAsState()
     val navController = rememberNavController()
-    val database: DoneListRoomDatabase by lazy { DoneListRoomDatabase.getDatabase(context)}
 
     NavHost(
         navController = navController,
@@ -62,12 +70,24 @@ fun DoneListApp(
             /* TEST */
             val list = listOf(
                 DoneListData(
-                    "2023-11-17",
-                    uiState.numberCount,
-                    arrayListOf("Clean up the desk", "Go to school", "Do the homework")
+                    date = "2023-11-17",
+                    allCount = uiState.numberCount,
+                    doneContent = arrayListOf(
+                        "Clean up the desk",
+                        "Go to school",
+                        "Do the homework"
+                    )
                 ),
-                DoneListData("2023-11-16", uiState.numberCount, arrayListOf("ss")),
-                DoneListData("2023-11-15", uiState.numberCount, arrayListOf("ss"))
+                DoneListData(
+                    date = "2023-11-16",
+                    allCount = uiState.numberCount,
+                    doneContent = arrayListOf("ss")
+                ),
+                DoneListData(
+                    date = "2023-11-15",
+                    allCount = uiState.numberCount,
+                    doneContent = arrayListOf("ss")
+                )
             )
             ListScreen(
                 allDoneCount = uiState.numberCount,
@@ -85,7 +105,7 @@ fun DoneListApp(
         }
 
         composable(route = DoneListScreen.Contents.name) {
-            ContentsScreen(uiState.currentContent)
+            ContentsScreen(context, content = uiState.currentContent)
         }
     }
 }

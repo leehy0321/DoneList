@@ -1,6 +1,7 @@
 package com.hy.donelist.ui
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.hy.donelist.data.DoneListDao
 import com.hy.donelist.data.DoneListData
@@ -44,7 +45,17 @@ class DoneListViewModel(private val doneListDao: DoneListDao) : ViewModel() {
         }
     }
 
-    fun addDoneListData(date: String, allCount: Int, doneList: ArrayList<String>) {
-        insertDoneListData(DoneListData(date, allCount, doneList))
+    fun addDoneListData(data: DoneListData) {
+        insertDoneListData(data)
+    }
+}
+
+class DoneListViewModelFactory(private val itemDao: DoneListDao) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(DoneListViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return DoneListViewModel(itemDao) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

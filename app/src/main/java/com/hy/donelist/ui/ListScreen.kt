@@ -23,8 +23,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,7 +33,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hy.donelist.R
 import com.hy.donelist.data.DoneListData
 import com.hy.donelist.ui.ui.theme.DoneListTheme
@@ -129,9 +126,9 @@ fun ListScreen(
 
                 onContentManageClickedEvent(
                     DoneListData(
-                        currentDate.toString(),
-                        allDoneCount,
-                        arrayListOf("")
+                        date = currentDate.toString(),
+                        allCount = allDoneCount,
+                        doneContent = arrayListOf()
                     )
                 )
             },
@@ -158,9 +155,9 @@ fun ListScreen(
 fun ListScreenPreview() {
     DoneListTheme {
         val list = listOf(
-            DoneListData("2023-11-17", 5, arrayListOf("aa", "bb", "cc")),
-            DoneListData("2023-11-16", 5, arrayListOf("ss")),
-            DoneListData("2023-11-15", 5, arrayListOf("ss"))
+            DoneListData(date = "2023-11-17", allCount = 5, doneContent = arrayListOf("aa", "bb", "cc")),
+            DoneListData(date = "2023-11-16", allCount = 5, doneContent = arrayListOf("ss")),
+            DoneListData(date = "2023-11-15", allCount = 5, doneContent = arrayListOf("ss"))
         )
         ListScreen(doneListData = list,allDoneCount = 5, onContentManageClickedEvent = {})
     }

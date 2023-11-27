@@ -12,11 +12,13 @@ import com.hy.donelist.ui.theme.DoneListTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             DoneListTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background) {
+                    color = MaterialTheme.colorScheme.background
+                ) {
                     DoneListApp(context = this)
                 }
             }

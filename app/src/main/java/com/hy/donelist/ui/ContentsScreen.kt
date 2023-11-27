@@ -1,6 +1,6 @@
 package com.hy.donelist.ui
 
-import androidx.compose.foundation.clickable
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,27 +27,29 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.hy.donelist.DoneListAppInfo
 import com.hy.donelist.R
 import com.hy.donelist.data.DoneListData
 import com.hy.donelist.ui.ui.theme.DoneListTheme
 
 @Composable
 fun ContentsScreen(
+    context: Context,
     content: DoneListData,
-    viewModel: DoneListViewModel = viewModel(),
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
+    val viewModel = DoneListAppInfo(context).doneListViewModel
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -75,16 +77,11 @@ fun ContentsScreen(
                 .padding(bottom = 20.dp)
         ) {
             itemsIndexed(content.doneContent) { index, item ->
-                var isEditing by remember { mutableStateOf(false) }
                 var editedText by remember { mutableStateOf(item) }
                 Card(
-                    onClick = {},
                     modifier = Modifier
                         .padding(horizontal = 8.dp, vertical = 10.dp)
-                        .fillMaxWidth()
-                        .clickable {
-                            isEditing = true
-                        },
+                        .fillMaxWidth(),
                     shape = RoundedCornerShape(corner = CornerSize(16.dp)),
                     colors = CardDefaults.cardColors(
                         containerColor = Color.White,
@@ -101,10 +98,12 @@ fun ContentsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         BasicTextField(
-                            value = TextFieldValue(editedText),
+                            value = editedText,
                             onValueChange = {
-                                editedText = it.text
+                                editedText = it
+                                content.doneContent[index] = editedText
                             },
+                            cursorBrush = SolidColor(Color.Black),
                             textStyle = LocalTextStyle.current.copy(
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold
@@ -112,13 +111,6 @@ fun ContentsScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(start = 10.dp)
-                                .onFocusChanged {
-                                    if (!it.isFocused) {
-                                        // Save changes when focus is lost
-                                        isEditing = false
-                                        content.doneContent[index] = editedText
-                                    }
-                                }
                         )
                     }
                 }
@@ -128,6 +120,7 @@ fun ContentsScreen(
         Button(
             onClick = {
                 viewModel.setCurrentContents(content)
+                viewModel.addDoneListData(content)
             },
             modifier = modifier
                 .widthIn(min = 200.dp),
@@ -152,10 +145,12 @@ fun ContentsScreen(
 fun ContentsScreenPreview() {
     DoneListTheme {
         ContentsScreen(
+            context = LocalContext.current,
+            content =
             DoneListData(
-                "2023-03-11",
-                4,
-                arrayListOf(
+                date = "2023-03-11",
+                allCount = 4,
+                doneContent = arrayListOf(
                     "Clean up the desk",
                     "Go to school",
                     "Do the homework"
