@@ -155,10 +155,14 @@ fun ListScreen(
 fun ListScreenPreview() {
     DoneListTheme {
         val list = listOf(
-            DoneListData(date = "2023-11-17", allCount = 5, doneContent = arrayListOf("aa", "bb", "cc")),
+            DoneListData(
+                date = "2023-11-17",
+                allCount = 5,
+                doneContent = arrayListOf("aa", "bb", "cc")
+            ),
             DoneListData(date = "2023-11-16", allCount = 5, doneContent = arrayListOf("ss")),
             DoneListData(date = "2023-11-15", allCount = 5, doneContent = arrayListOf("ss"))
         )
-        ListScreen(doneListData = list,allDoneCount = 5, onContentManageClickedEvent = {})
+        ListScreen(doneListData = list, allDoneCount = 5, onContentManageClickedEvent = {})
     }
 }

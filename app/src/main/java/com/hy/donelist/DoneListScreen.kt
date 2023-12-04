@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -67,41 +68,14 @@ fun DoneListApp(
         }
 
         composable(route = DoneListScreen.List.name) {
-            /* TEST */
-            val list = listOf(
-                DoneListData(
-                    date = "2023-11-17",
-                    allCount = uiState.numberCount,
-                    doneContent = arrayListOf(
-                        "Clean up the desk",
-                        "Go to school",
-                        "Do the homework"
-                    )
-                ),
-                DoneListData(
-                    date = "2023-11-16",
-                    allCount = uiState.numberCount,
-                    doneContent = arrayListOf("ss")
-                ),
-                DoneListData(
-                    date = "2023-11-15",
-                    allCount = uiState.numberCount,
-                    doneContent = arrayListOf("ss")
-                )
-            )
+            val doneList: List<DoneListData> by viewModel.allItems.observeAsState(emptyList())
             ListScreen(
                 allDoneCount = uiState.numberCount,
-                doneListData = list,
+                doneListData = doneList,
                 onContentManageClickedEvent = {
                     viewModel.setCurrentContents(it)
                     navController.navigate(DoneListScreen.Contents.name)
                 })
-
-            /*
-            ListScreen(
-                doneListData = viewModel.getListDoneList()
-            )
-            */
         }
 
         composable(route = DoneListScreen.Contents.name) {

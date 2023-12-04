@@ -8,9 +8,7 @@ import androidx.room.TypeConverters
 @Entity(tableName = "DoneListTable")
 @TypeConverters(DoneContentDataConvert::class)
 data class DoneListData(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
-
+    @PrimaryKey
     @ColumnInfo(name = "date")
     var date: String = "",
 

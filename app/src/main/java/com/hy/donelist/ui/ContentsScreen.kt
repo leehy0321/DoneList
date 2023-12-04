@@ -57,9 +57,10 @@ fun ContentsScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        val needAddDoneContent: Int = content.allCount - content.doneContent.size
+        val currentDoneContent = ArrayList(content.doneContent)
+        val needAddDoneContent: Int = content.allCount - currentDoneContent.size
         for (i in 0 until needAddDoneContent) {
-            content.doneContent.add("")
+            currentDoneContent.add("")
         }
 
         Text(
@@ -76,7 +77,7 @@ fun ContentsScreen(
                 .fillMaxHeight(0.7f)
                 .padding(bottom = 20.dp)
         ) {
-            itemsIndexed(content.doneContent) { index, item ->
+            itemsIndexed(currentDoneContent) { index, item ->
                 var editedText by remember { mutableStateOf(item) }
                 Card(
                     modifier = Modifier
@@ -101,7 +102,7 @@ fun ContentsScreen(
                             value = editedText,
                             onValueChange = {
                                 editedText = it
-                                content.doneContent[index] = editedText
+                                currentDoneContent[index] = editedText
                             },
                             cursorBrush = SolidColor(Color.Black),
                             textStyle = LocalTextStyle.current.copy(
@@ -119,6 +120,9 @@ fun ContentsScreen(
 
         Button(
             onClick = {
+                currentDoneContent.removeAll { it.isEmpty() }
+
+                content.doneContent = currentDoneContent
                 viewModel.setCurrentContents(content)
                 viewModel.addDoneListData(content)
             },
