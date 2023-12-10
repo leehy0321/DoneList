@@ -1,7 +1,11 @@
 package com.hy.donelist.ui
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -9,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -38,7 +43,18 @@ import com.hy.donelist.data.DoneListData
 import com.hy.donelist.ui.ui.theme.DoneListTheme
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.DpOffset
 
+@OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("SimpleDateFormat")
 @Composable
 fun ListScreen(
@@ -47,6 +63,12 @@ fun ListScreen(
     doneListData: List<DoneListData>,
     onContentManageClickedEvent: (DoneListData) -> Unit
 ) {
+    var selectedOffset = DpOffset.Zero
+    var selectedItem by remember { mutableStateOf<DoneListData?>(null) }
+    val density = LocalDensity.current
+    var itemHeight by remember { mutableStateOf(0.dp) }
+    var itemWidth by remember { mutableStateOf(0.dp) }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -69,9 +91,13 @@ fun ListScreen(
                 .padding(bottom = 20.dp)
         ) {
             items(doneListData) { item ->
+                var isContextMenuVisible by remember { mutableStateOf(false) }
                 Card(
-                    onClick = { onContentManageClickedEvent(item) },
                     modifier = Modifier
+                        .onSizeChanged {
+                            itemHeight = with(density) { it.height.toDp() }
+                            itemWidth = with(density) { it.width.toDp() }
+                        }
                         .padding(horizontal = 8.dp, vertical = 10.dp)
                         .fillMaxWidth(),
                     shape = RoundedCornerShape(corner = CornerSize(16.dp)),
@@ -82,47 +108,92 @@ fun ListScreen(
                         disabledContentColor = Color.White
                     )
                 ) {
-                    Row(
-                        modifier = modifier
-                            .padding(10.dp)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            modifier = modifier.padding(start = 5.dp),
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            text = item.date
-                        )
-                        Row(
-                            horizontalArrangement = Arrangement.End,
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = modifier.padding(end = 5.dp)
-                        ) {
-                            Text(
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold,
-                                text = "" + item.doneContent.size
-                            )
-                            Text(
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold,
-                                text = "/"
-                            )
-                            Text(
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold,
-                                text = "" + item.allCount
+                    Box(modifier = Modifier
+                        .pointerInput(Unit) {
+                            detectTapGestures(
+                                onLongPress = {
+                                    selectedOffset = DpOffset(it.x.toDp(), it.y.toDp())
+                                }
                             )
                         }
+                        .combinedClickable(
+                            onClick = { onContentManageClickedEvent(item) },
+                            onLongClick = {
+                                isContextMenuVisible = true
+                                selectedItem = item
+                            },
+                            onLongClickLabel = stringResource(R.string.long_click_string)
+                        )
+                    ) {
+                        Row(
+                            modifier = modifier
+                                .padding(10.dp)
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                modifier = modifier.padding(start = 5.dp),
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                text = item.date
+                            )
+                            Row(
+                                horizontalArrangement = Arrangement.End,
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = modifier.padding(end = 5.dp)
+                            ) {
+                                Text(
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    text = "" + item.doneContent.size
+                                )
+                                Text(
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    text = "/"
+                                )
+                                Text(
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    text = "" + item.allCount
+                                )
+                            }
+                        }
+                    }
+                    DropdownMenu(
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .align(Alignment.CenterHorizontally),
+                        expanded = isContextMenuVisible,
+                        onDismissRequest = { isContextMenuVisible = false },
+                        offset = DpOffset(selectedOffset.x, selectedOffset.y)
+                    ) {
+                        DropdownMenuItem(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(0.dp),
+                            text = {
+                                Text(
+                                    text = "Remove",
+                                    fontSize = 16.sp,
+                                    color = colorResource(id = R.color.point_pink_color),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            },
+                            onClick = {
+                                isContextMenuVisible = false
+                            }
+                        )
                     }
                 }
             }
         }
+
         Button(
             onClick = {
-                val currentDate = SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().time)
+                val currentDate =
+                    SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().time)
 
                 onContentManageClickedEvent(
                     DoneListData(
