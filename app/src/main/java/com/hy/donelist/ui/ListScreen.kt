@@ -50,9 +50,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.DpOffset
+import com.hy.donelist.DoneListAppInfo
 
 @OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("SimpleDateFormat")
@@ -63,11 +63,10 @@ fun ListScreen(
     doneListData: List<DoneListData>,
     onContentManageClickedEvent: (DoneListData) -> Unit
 ) {
+    val viewModel = DoneListAppInfo(LocalContext.current).doneListViewModel
+
     var selectedOffset = DpOffset.Zero
-    var selectedItem by remember { mutableStateOf<DoneListData?>(null) }
-    val density = LocalDensity.current
-    var itemHeight by remember { mutableStateOf(0.dp) }
-    var itemWidth by remember { mutableStateOf(0.dp) }
+    var selectedItem by remember { mutableStateOf(DoneListData("",0,arrayListOf())) }
 
     Column(
         modifier = modifier
@@ -94,10 +93,6 @@ fun ListScreen(
                 var isContextMenuVisible by remember { mutableStateOf(false) }
                 Card(
                     modifier = Modifier
-                        .onSizeChanged {
-                            itemHeight = with(density) { it.height.toDp() }
-                            itemWidth = with(density) { it.width.toDp() }
-                        }
                         .padding(horizontal = 8.dp, vertical = 10.dp)
                         .fillMaxWidth(),
                     shape = RoundedCornerShape(corner = CornerSize(16.dp)),
@@ -183,6 +178,7 @@ fun ListScreen(
                             },
                             onClick = {
                                 isContextMenuVisible = false
+                                viewModel.deleteContent(selectedItem)
                             }
                         )
                     }

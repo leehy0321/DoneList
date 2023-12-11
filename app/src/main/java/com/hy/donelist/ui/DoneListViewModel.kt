@@ -22,23 +22,24 @@ class DoneListViewModel(private val doneListDao: DoneListDao) : ViewModel() {
 
     val allItems: LiveData<List<DoneListData>> = doneListDao.getItems().asLiveData()
 
-    fun refreshCurrentContent(content: DoneListData)= viewModelScope.launch {
+    /**
+     * set current content [content] and check if there is saved content [content]
+     */
+    fun refreshCurrentContent(content: DoneListData) = viewModelScope.launch {
+        val savingContent = doneListDao.getItem(content.date) ?: content
+
         _uiState.update { currentState ->
             currentState.copy(
-                currentContent = doneListDao.getItem(content.date)
+                currentContent = savingContent
             )
         }
     }
 
     /**
-     * Set the current content [content] to control (create or show)
+     * Delete content from bata base
      */
-    fun setCurrentContents(content: DoneListData) {
-        _uiState.update { currentState ->
-            currentState.copy(
-                currentContent = content
-            )
-        }
+    fun deleteContent(content: DoneListData) = viewModelScope.launch {
+        doneListDao.delete(content)
     }
 
     /**

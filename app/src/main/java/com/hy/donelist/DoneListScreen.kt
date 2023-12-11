@@ -73,7 +73,7 @@ fun DoneListApp(
                 allDoneCount = uiState.numberCount,
                 doneListData = doneList,
                 onContentManageClickedEvent = {
-                    viewModel.setCurrentContents(it)
+                    viewModel.refreshCurrentContent(it)
                     navController.navigate(DoneListScreen.Contents.name)
                 })
         }

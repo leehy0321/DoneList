@@ -127,9 +127,11 @@ fun ContentsScreen(
             onClick = {
                 currentDoneContent.removeAll { it.isEmpty() }
 
-                currentContent.doneContent = currentDoneContent
-                viewModel.setCurrentContents(currentContent)
-                viewModel.addDoneListData(currentContent)
+                if(currentDoneContent.isNotEmpty()) {
+                    currentContent.doneContent = currentDoneContent
+                    viewModel.refreshCurrentContent(currentContent)
+                    viewModel.addDoneListData(currentContent)
+                }
             },
             modifier = modifier
                 .widthIn(min = 200.dp),
