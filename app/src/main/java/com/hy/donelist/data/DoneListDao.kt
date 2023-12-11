@@ -18,7 +18,7 @@ interface DoneListDao {
 
     // Flow / LiveData : to get the alarm whenever the data is changed.
     @Query("SELECT * from DoneListTable WHERE date = :id")
-    fun getItem(id: String): Flow<DoneListData>
+    suspend fun getItem(id: String): DoneListData
 
     @Query("SELECT * from DoneListTable ORDER BY date DESC")
     fun getItems(): Flow<List<DoneListData>>

@@ -21,6 +21,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,7 +50,11 @@ fun ContentsScreen(
     modifier: Modifier = Modifier
 ) {
     val viewModel = DoneListAppInfo(context).doneListViewModel
+    val uiState by viewModel.uiState.collectAsState()
 
+    viewModel.refreshCurrentContent(content)
+    val currentContent = uiState.currentContent
+    
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -57,14 +62,14 @@ fun ContentsScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        val currentDoneContent = ArrayList(content.doneContent)
-        val needAddDoneContent: Int = content.allCount - currentDoneContent.size
+        val currentDoneContent = ArrayList(currentContent.doneContent)
+        val needAddDoneContent: Int = currentContent.allCount - currentDoneContent.size
         for (i in 0 until needAddDoneContent) {
             currentDoneContent.add("")
         }
 
         Text(
-            text = content.date,
+            text = currentContent.date,
             fontSize = 50.sp,
             fontWeight = FontWeight.Bold,
             color = colorResource(id = R.color.point_pink_color),
@@ -122,9 +127,9 @@ fun ContentsScreen(
             onClick = {
                 currentDoneContent.removeAll { it.isEmpty() }
 
-                content.doneContent = currentDoneContent
-                viewModel.setCurrentContents(content)
-                viewModel.addDoneListData(content)
+                currentContent.doneContent = currentDoneContent
+                viewModel.setCurrentContents(currentContent)
+                viewModel.addDoneListData(currentContent)
             },
             modifier = modifier
                 .widthIn(min = 200.dp),

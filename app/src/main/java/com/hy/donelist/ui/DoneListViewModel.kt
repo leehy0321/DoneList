@@ -22,6 +22,14 @@ class DoneListViewModel(private val doneListDao: DoneListDao) : ViewModel() {
 
     val allItems: LiveData<List<DoneListData>> = doneListDao.getItems().asLiveData()
 
+    fun refreshCurrentContent(content: DoneListData)= viewModelScope.launch {
+        _uiState.update { currentState ->
+            currentState.copy(
+                currentContent = doneListDao.getItem(content.date)
+            )
+        }
+    }
+
     /**
      * Set the current content [content] to control (create or show)
      */
@@ -34,7 +42,7 @@ class DoneListViewModel(private val doneListDao: DoneListDao) : ViewModel() {
     }
 
     /**
-     * Set the quantity [countNumber] of donelist for creating.
+     * Set the quantity [countNumber] of done list for creating.
      */
     fun setCountNumber(countNumber: Int) {
         _uiState.update { currentState ->
