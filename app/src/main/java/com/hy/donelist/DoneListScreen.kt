@@ -49,8 +49,10 @@ fun DoneListApp(
     val uiState by viewModel.uiState.collectAsState()
     val navController = rememberNavController()
 
-    val isInitExecuteApp by doneListDataStore.preferenceFlow.collectAsState(false)
-    val startDestination = if (isInitExecuteApp) DoneListScreen.Number.name else DoneListScreen.List.name
+    val getSavedCount by doneListDataStore.preferenceFlow.collectAsState(5)
+    viewModel.setCountNumber(getSavedCount)
+
+    val startDestination = if (getSavedCount == 0) DoneListScreen.Number.name else DoneListScreen.List.name
 
     NavHost(
         navController = navController,
@@ -62,7 +64,7 @@ fun DoneListApp(
                 context = context,
                 onFinishSettingButtonClicked = {
                     viewModel.setCountNumber(it)
-                    viewModel.setInitFromDoneListDataStore(context, false)
+                    viewModel.setInitFromDoneListDataStore(context, it)
                     navController.navigate(DoneListScreen.List.name)
                 }
             )

@@ -32,16 +32,16 @@ class DoneListViewModel(
     /**
      * set doneListDataStore - is_first_execute setting to [value]
      */
-    fun setInitFromDoneListDataStore(context: Context, value: Boolean) {
+    fun setInitFromDoneListDataStore(context: Context, value: Int) {
         CoroutineScope(EmptyCoroutineContext).launch {
-            doneListDataStore.saveLayoutToPreferencesStore(value, context)
+            doneListDataStore.saveCurrentSavedCountNumber(value, context)
         }
     }
     /**
      * set current content [content] and check if there is saved content [content]
      */
     fun refreshCurrentContent(content: DoneListData) = viewModelScope.launch {
-        val savingContent = doneListDao.getItem(content.date)
+        val savingContent = doneListDao.getItem(content.date) ?: content
 
         _uiState.update { currentState ->
             currentState.copy(

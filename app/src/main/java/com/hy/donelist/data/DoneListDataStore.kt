@@ -3,9 +3,9 @@ package com.hy.donelist.data
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -21,15 +21,15 @@ private val Context.dataStore : DataStore<Preferences> by preferencesDataStore(
 )
 
 class DoneListDataStore(context: Context) {
-    private val isFirstExecute = booleanPreferencesKey("is_first_execute")
+    private val savedCountNumber = intPreferencesKey("saved_count_number")
 
-    suspend fun saveLayoutToPreferencesStore(isLinearLayoutManager: Boolean, context: Context) {
+    suspend fun saveCurrentSavedCountNumber(savingNumber: Int, context: Context) {
         context.dataStore.edit { preferences ->
-            preferences[isFirstExecute] = isLinearLayoutManager
+            preferences[savedCountNumber] = savingNumber
         }
     }
 
-    val preferenceFlow: Flow<Boolean> = context.dataStore.data
+    val preferenceFlow: Flow<Int> = context.dataStore.data
         .catch {
             if (it is IOException) {
                 it.printStackTrace()
@@ -39,7 +39,7 @@ class DoneListDataStore(context: Context) {
             }
         }
         .map { preferences ->
-            // On the first run of the app, we will use isFirstExecute by default
-            preferences[isFirstExecute] ?: true
+            // On the first run of the app, we will use savedCountNumber by default
+            preferences[savedCountNumber] ?: 0
         }
 }
