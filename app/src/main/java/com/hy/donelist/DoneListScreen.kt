@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.hy.donelist.data.DoneListData
+import com.hy.donelist.data.DoneListDataStore
 import com.hy.donelist.data.DoneListRoomDatabase
 import com.hy.donelist.ui.ContentsScreen
 import com.hy.donelist.ui.DoneListViewModel
@@ -28,25 +29,32 @@ enum class DoneListScreen {
 
 class DoneListAppInfo(context: Context) {
     val doneListViewModel: DoneListViewModel by lazy {
-        DoneListViewModelFactory(DoneListRoomDatabase.getDatabase(context).itemDao()).create(
+        DoneListViewModelFactory(DoneListRoomDatabase.getDatabase(context).itemDao(), doneListDataStore).create(
             DoneListViewModel::class.java
         )
     }
 }
+
+private lateinit var doneListDataStore: DoneListDataStore
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun DoneListApp(
     context: Context
 ) {
+    doneListDataStore = DoneListDataStore(context)
+
     val viewModel = DoneListAppInfo(context).doneListViewModel
 
     val uiState by viewModel.uiState.collectAsState()
     val navController = rememberNavController()
 
+    val isInitExecuteApp by doneListDataStore.preferenceFlow.collectAsState(false)
+    val startDestination = if (isInitExecuteApp) DoneListScreen.Number.name else DoneListScreen.List.name
+
     NavHost(
         navController = navController,
-        startDestination = DoneListScreen.Number.name,
+        startDestination = startDestination,
         modifier = Modifier
     ) {
         composable(route = DoneListScreen.Number.name) {
@@ -54,6 +62,7 @@ fun DoneListApp(
                 context = context,
                 onFinishSettingButtonClicked = {
                     viewModel.setCountNumber(it)
+                    viewModel.setInitFromDoneListDataStore(context, false)
                     navController.navigate(DoneListScreen.List.name)
                 }
             )

@@ -60,6 +60,7 @@ dependencies {
 
     implementation ("androidx.compose.runtime:runtime-livedata:1.5.4") // for observeAsState
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1") // for asLiveData
+    implementation("androidx.datastore:datastore-preferences:1.0.0") // for Preferences DataStore
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
